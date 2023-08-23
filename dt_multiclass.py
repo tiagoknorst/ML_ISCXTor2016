@@ -41,7 +41,7 @@ import glob                     # biblioteca para acessar arquivos facilmente
 from sklearn.neighbors import KNeighborsClassifier # biblioteca para treinar KNN
 sns.set()
 
-file="TOR-NonTOR.csv"
+file="Apps.csv"
 data = pd.read_csv(file, dtype={'Source IP':str,
                                 'Source Port':int,
                                 'Destination IP':str,
@@ -131,9 +131,10 @@ Para o Holdout, iremos utilizar o método `train_test_split()` da biblioteca [sc
 ## Separa o dataset em duas variáveis: os atributos/entradas (X) e a classe/saída (y)
 X = data.iloc[:, :-1].values  # matriz contendo os atributos
 y = data.iloc[:, data.shape[1]-1].values  # vetor contendo a classe (0 para maligno e 1 para benigno) de cada instância
-y = np.array([0 if y=='nonTOR' else 1 for y in y]) 
+#y = np.array([0 if y=='nonTOR' else 1 for y in y]) 
 feature_names = data.columns.tolist() #data.feature_names  # nome de cada atributo
-target_names = ["0.0", "1.0"]  # nome de cada classe
+#target_names = ["0.0", "1.0"]  # nome de cada classe
+target_names = ["AUDIO", "BROWSING", "CHAT", "FILE-TRANSFER", "MAIL", "P2P", "VIDEO", "VOIP"]  # nome de cada classe
 
 
 print(f"Dimensões de X: {X.shape}\n")
@@ -147,13 +148,14 @@ print(f"Nomes das classes: {target_names}")
 É possível também contar quantos exemplos pertencem à classe dos tumores malignos e quantos à classe dos benignos
 """
 
-import numpy as np
-
-n_malign = np.sum(y == 0)
-n_benign = np.sum(y == 1)
-
-print("Número de exemplos malignos: %d" % n_malign)
-print("Número de exemplos benignos: %d" % n_benign)
+print("Número de exemplos audio: %d" % np.sum(y == "AUDIO"))
+print("Número de exemplos browsing: %d" % np.sum(y == "BROWSING"))
+print("Número de exemplos chat: %d" % np.sum(y == "CHAT"))
+print("Número de exemplos filetransfer: %d" % np.sum(y == "FILE-TRANSFER"))
+print("Número de exemplos mail: %d" % np.sum(y == "MAIL"))
+print("Número de exemplos p2p: %d" % np.sum(y == "P2P"))
+print("Número de exemplos video: %d" % np.sum(y == "VIDEO"))
+print("Número de exemplos voip: %d" % np.sum(y == "VOIP"))
 
 """## Variância nas Árvores de Decisão
 
@@ -283,12 +285,13 @@ As árvores de decisão treinadas nos itens anteriores não possuíam nenhuma fo
 Podemos especificar a profundidade máxima da árvore utilizando o parâmetro max_depth.
 """
 
-dt = DecisionTreeClassifier(max_depth=2)
+dt = DecisionTreeClassifier(max_depth=3)
 dt.fit(X, y)
 
 import matplotlib.pyplot as plt
 from sklearn.tree import plot_tree
-plt.figure(figsize=(12,6))
+#plt.figure(figsize=(12,6))
+plt.figure(figsize=(24,12))
 _ = plot_tree(dt, feature_names=feature_names, class_names=target_names)
 
 """O código abaixo gera árvores de decisão com diferentes profundidades máximas e as avalia em termos de acurácia.
